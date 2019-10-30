@@ -1,0 +1,3 @@
+bdd\features\steps\ShipValidationSteps.class
+bdd\CucumberRunner.class
+org\scrum\psd\battleship\controller\GameControllerTest.class
