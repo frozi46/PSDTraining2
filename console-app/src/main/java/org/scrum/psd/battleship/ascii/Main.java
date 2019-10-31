@@ -7,6 +7,7 @@ import org.scrum.psd.battleship.controller.dto.Letter;
 import org.scrum.psd.battleship.controller.dto.Position;
 import org.scrum.psd.battleship.controller.dto.Ship;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -15,6 +16,7 @@ public class Main {
     private static List<Ship> myFleet;
     private static List<Ship> enemyFleet;
     private static ColoredPrinter console;
+    private static List flag = new ArrayList();
 
     public static void main(String[] args) {
         console = new ColoredPrinter.Builder(1, false).build();
@@ -37,6 +39,8 @@ public class Main {
         console.println("");
         console.println("\n");
         console.println("\n");
+
+
         console.println("PLAYER 1");
         console.println("                                     |__");
         console.println("                                     |\\/");
@@ -97,16 +101,26 @@ public class Main {
             }
 
             console.println(isHit ? "Yeah ! Nice hit !" : "Miss");
-
+            for(Ship ship : enemyFleet) {
+            	//System.out.println(position.getColumn()+ ""+position.getRow());
+            	//System.out.println("position ship : "+ship.getPositions());
+            	for(Position pos: ship.getPositions())
+            	if((pos.getColumn()+""+pos.getRow()).equals(position.getColumn()+ ""+position.getRow()))
+            	{
+            		System.out.print("Shooted at : " + pos.getColumn()+""+pos.getRow());
+            		flag.add(pos.getColumn()+""+pos.getRow());
+            	}
+            	//System.out.println(ship.getName() + " Ship is sunk ");	
+            }
             position = getRandomPosition();
             isHit = GameController.checkIsHit(myFleet, position);
-            console.setForegroundColor(Ansi.FColor.GREEN);
+            console.setForegroundColor(Ansi.FColor.YELLOW);
             console.println("");
             console.println(String.format("Computer shoot in %s%s and %s", position.getColumn(), position.getRow(), isHit ? "hit your ship !" : "miss"));
             if (isHit) {
                 beep();
 
-                console.setForegroundColor(Ansi.FColor.YELLOW);
+                console.setForegroundColor(Ansi.FColor.WHITE);
                 console.println("                \\         .  ./");
                 console.println("              \\      .:\" \";'.:..\" \"   /");
                 console.println("                  (M^^.^~~:.'\" \").");
