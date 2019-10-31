@@ -22,7 +22,7 @@ public class Main {
         console = new ColoredPrinter.Builder(1, false).build();
 
         console.setForegroundColor(Ansi.FColor.MAGENTA);
-        console.println("COMPUTER");
+        console.println("===COMPUTER===");
         console.println("                                     |__");
         console.println("                                     |\\/");
         console.println("                                     ---");
@@ -41,7 +41,7 @@ public class Main {
         console.println("\n");
 
 
-        console.println("PLAYER 1");
+        console.println("===PLAYER 1===");
         console.println("                                     |__");
         console.println("                                     |\\/");
         console.println("                                     ---");
@@ -100,16 +100,51 @@ public class Main {
                 console.println("                   \\  \\   /  /");
             }
 
-            console.println(isHit ? "Yeah ! Nice hit !" : "Miss");
+            for(int j=0;j<5;j++) {
+                enemyFleet.get(j).getPositions();
+                if(enemyFleet.get(j).getPositions() == null) {
+                 console.println("You already hit that coordinate! Try another coordinate...");
+            }}
+
+            console.println(isHit ? "Yeah ! Nice hit !" : "Missed hit Enemy's fleet");
             for(Ship ship : enemyFleet) {
             	//System.out.println(position.getColumn()+ ""+position.getRow());
-            	//System.out.println("position ship : "+ship.getPositions());
-            	for(Position pos: ship.getPositions())
-            	if((pos.getColumn()+""+pos.getRow()).equals(position.getColumn()+ ""+position.getRow()))
-            	{
-            		System.out.print("Shooted at : " + pos.getColumn()+""+pos.getRow());
-            		flag.add(pos.getColumn()+""+pos.getRow());
-            	}
+                //System.out.println("position ship : "+ship.getPositions());
+                try {
+                    for(Position pos: ship.getPositions())
+                    if((pos.getColumn()+""+pos.getRow()).equals(position.getColumn()+ ""+position.getRow()))
+                    {
+                     
+                        if((pos.getColumn().equals(Letter.B))){
+                            System.out.print("You hit Aircraft Carrier of Enemy's fleet Shooted at : " + pos.getColumn()+""+pos.getRow());
+                            flag.add(pos.getColumn()+""+pos.getRow());
+                        } else if((pos.getColumn().equals(Letter.E))) {
+                            System.out.print("You hit Battleship of Enemy's fleet Shooted at : " + pos.getColumn()+""+pos.getRow());
+                            flag.add(pos.getColumn()+""+pos.getRow());
+                        }else if((pos.getRow() == 3)) {
+                            System.out.print("You hit Submarine of Enemy's fleet Shooted at : " + pos.getColumn()+""+pos.getRow());
+                            flag.add(pos.getColumn()+""+pos.getRow());
+                        }else if((pos.getRow() == 8)) {
+                            System.out.print("You hit Destroyer of Enemy's fleet Shooted at : " + pos.getColumn()+""+pos.getRow());
+                            flag.add(pos.getColumn()+""+pos.getRow());
+                        }else if((pos.getColumn().equals(Letter.C))) {
+                            System.out.print("You hit Patrol Boat of Enemy's fleet Shooted at : " + pos.getColumn()+""+pos.getRow());
+                            flag.add(pos.getColumn()+""+pos.getRow());
+                        }
+                        for(int i=0;i<5;i++) {
+                        enemyFleet.get(i).getPositions().remove(new Position(pos.getColumn(),pos.getRow()));
+                        if(enemyFleet.get(i).getPositions().size()==0) {
+                         console.println("\n"+ship.getName() + " has been sunk");
+                         }
+                     }
+                     
+                     //flag.add(pos.getColumn()+""+pos.getRow());
+                        
+                    }
+                }
+                catch(Exception e) {
+                    
+                }
             	//System.out.println(ship.getName() + " Ship is sunk ");	
             }
             position = getRandomPosition();
@@ -155,7 +190,7 @@ public class Main {
     }
 
     private static void InitializeGame() {
-        InitializeMyFleet();
+        //InitializeMyFleet();
 
         InitializeEnemyFleet();
     }
@@ -179,9 +214,48 @@ public class Main {
     }
 
     private static void InitializeEnemyFleet() {
+        int maxNumber = 8;
+    	String letter = "";
         enemyFleet = GameController.initializeShips();
+        ArrayList<String> currentLetter = new ArrayList<String>();
+        
+        for(Ship ship : enemyFleet) {
+        	int number = 0;
+        	boolean flag = true;
+        	boolean flagLetter = true;
+        	//letter = getRandomPosition().getColumn().toString();
+        	      	
+        	        	
+        	while(flagLetter) {
+        		letter = getRandomPosition().getColumn().toString();
+        		//console.debugPrintln(letter);
+        		currentLetter.add(letter);
+        		if (currentLetter.contains(letter)) {
+        			//console.println(letter);
+        			flagLetter = false;
+        		}
+        	}
+        	
+        	int diff = maxNumber - ship.getSize();
+        	//console.debugPrintln(diff);
+        	while (flag) {
+        		number = getRandomPosition().getRow();
+        		if (number <= diff && number != 0) {
+        			flag = false;
+        			//console.println(number);
+        		}
+        	}
+        	 for (int i = 1; i <= ship.getSize(); i++) {
+				console.print(letter+number+",");
+				ship.addPosition(letter+number);
+				number++;
+			}
+        	console.println("");
+        }
 
-        enemyFleet.get(0).getPositions().add(new Position(Letter.B, 4));
+        //enemyFleet = GameController.initializeShips();
+
+        /*enemyFleet.get(0).getPositions().add(new Position(Letter.B, 4));
         enemyFleet.get(0).getPositions().add(new Position(Letter.B, 5));
         enemyFleet.get(0).getPositions().add(new Position(Letter.B, 6));
         enemyFleet.get(0).getPositions().add(new Position(Letter.B, 7));
@@ -201,6 +275,6 @@ public class Main {
         enemyFleet.get(3).getPositions().add(new Position(Letter.H, 8));
 
         enemyFleet.get(4).getPositions().add(new Position(Letter.C, 5));
-        enemyFleet.get(4).getPositions().add(new Position(Letter.C, 6));
+        enemyFleet.get(4).getPositions().add(new Position(Letter.C, 6));*/
     }
 }
